@@ -40,6 +40,28 @@ function detectCategory(text: string): string | null {
   return null
 }
 
+// Poznati moto brendovi — za izvlačenje iz naziva kad JSON-LD nema brend
+const KNOWN_BRANDS = [
+  'Alpinestars', 'Dainese', 'Shoei', 'Arai', 'AGV', 'HJC', 'Schuberth', 'Nolan', 'Scorpion',
+  'Daytona', 'Sidi', 'Forma', 'TCX', 'Gaerne', 'Stylmartin', 'Falco',
+  'Rev’it', "Rev'it", 'Revit', 'Held', 'Büse', 'Buse', 'Macna', 'Furygan', 'Spidi', 'IXS', 'iXS',
+  'Rukka', 'Klim', 'Richa', 'Bering', 'Modeka', 'Vanucci', 'Probiker', 'Germot', 'Held',
+  'LS2', 'Caberg', 'Shark', 'Bell', 'Airoh', 'MT', 'Givi', 'Kappa', 'SW-Motech', 'Touratech',
+  'Oxford', 'Acerbis', 'Leatt', 'Fox', 'O’Neal', "O'Neal", 'Oneal', 'Thor', 'Booster',
+]
+
+function detectBrand(name: string): string | null {
+  if (!name) return null
+  const lower = name.toLowerCase()
+  for (const b of KNOWN_BRANDS) {
+    if (lower.includes(b.toLowerCase())) return b
+  }
+  // fallback: prva reč naziva (često je brend)
+  const first = name.trim().split(/\s+/)[0]
+  if (first && first.length > 2 && /^[A-ZÄÖÜ]/.test(first)) return first
+  return null
+}
+
 function extractSizes(text: string): string[] {
   const found = new Set<string>()
   // Slovne veličine
@@ -197,12 +219,39 @@ export async function POST(request: NextRequest) {
       if (best) data.images.push(best)
     })
 
+    // 2c) Slike iz inline JSON skripti (Polo/Louis lazy-load galeriju kao JSON)
+    $('script').each((_, el) => {
+      const txt = $(el).contents().text()
+      if (!txt || txt.length > 200000) return
+      // nadji URL-ove slika u skripti
+      const matches = txt.match(/https?:\\?\/\\?\/[^"'\s]+\.(?:jpg|jpeg|png|webp)/gi)
+      if (matches) {
+        matches.forEach((m) => {
+          const clean = m.replace(/\\/g, '')
+          const low = clean.toLowerCase()
+          if (low.includes('logo') || low.includes('icon') || low.includes('sprite') || low.includes('flag')) return
+          data.images.push(clean)
+        })
+      }
+    })
+
+    // 2d) preload slike i picture source
+    $('link[rel="preload"][as="image"]').each((_, el) => {
+      const href = $(el).attr('href')
+      if (href && href.startsWith('http')) data.images.push(href)
+    })
+
     if (!data.priceEur) {
       const ogPrice = $('meta[property="product:price:amount"]').attr('content')
       if (ogPrice) {
         const v = parseFloat(ogPrice.replace(',', '.'))
         if (!isNaN(v)) data.priceEur = v
       }
+    }
+
+    // Brend fallback iz naziva
+    if (!data.brand && data.name) {
+      data.brand = detectBrand(data.name)
     }
 
     // 3) Očisti, deduplikuj i ograniči slike (do 12)
