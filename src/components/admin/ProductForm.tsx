@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plus, X, Upload, ArrowLeft, Link2, Image as ImageIcon } from 'lucide-react'
+import { Plus, X, Upload, ArrowLeft, Link2, Image as ImageIcon, Download, Loader2 } from 'lucide-react'
 import { toast } from '@/hooks/use-toast'
 
 interface Category {
@@ -58,6 +58,7 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [urlInput, setUrlInput] = useState('')
+  const [scraping, setScraping] = useState(false)
   const [activeTab, setActiveTab] = useState<'basic' | 'nabavka' | 'images' | 'variants' | 'specs' | 'seo'>('basic')
 
   const [form, setForm] = useState<ProductFormData>({
@@ -161,6 +162,58 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
 
   const removeSpec = (i: number) => {
     update('specifications', form.specifications.filter((_, idx) => idx !== i))
+  }
+
+  // Povlačenje podataka sa dobavljačevog URL-a
+  const scrapeFromUrl = async () => {
+    const targetUrl = form.supplierUrl.trim()
+    if (!targetUrl || !targetUrl.startsWith('http')) {
+      toast({ title: 'Unesi ispravan URL dobavljača', variant: 'destructive' })
+      return
+    }
+    setScraping(true)
+    try {
+      const res = await fetch('/api/admin/scrape', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: targetUrl }),
+      })
+      const json = await res.json()
+
+      if (!res.ok) {
+        toast({ title: 'Povlačenje nije uspelo', description: json.error || 'Probaj ručni unos', variant: 'destructive' })
+        return
+      }
+
+      const p = json.product
+      // Popuni samo polja koja su prazna ili ih korisnik želi prepisati
+      setForm(prev => ({
+        ...prev,
+        name: prev.name || p.name || '',
+        description: prev.description || p.description || '',
+        brand: prev.brand || p.brand || '',
+        sku: prev.sku || p.sku || '',
+        supplierPriceEur: p.priceEur ? String(p.priceEur) : prev.supplierPriceEur,
+        supplierPrice: p.supplierPriceRsd ? String(p.supplierPriceRsd) : prev.supplierPrice,
+        price: prev.price || (p.suggestedPriceRsd ? String(p.suggestedPriceRsd) : ''),
+        images: [
+          ...prev.images,
+          ...(p.images || [])
+            .filter((u: string) => !prev.images.some(img => img.url === u))
+            .map((u: string) => ({ url: u, alt: p.name || 'slika' })),
+        ],
+      }))
+
+      toast({
+        title: '✓ Podaci povučeni',
+        description: `${p.name?.slice(0, 40) || 'Proizvod'} · ${p.images?.length || 0} slika${p.priceEur ? ` · ${p.priceEur}€` : ''}`,
+        variant: 'success',
+      })
+    } catch (e) {
+      toast({ title: 'Greška pri povlačenju', description: 'Probaj ponovo ili unesi ručno', variant: 'destructive' })
+    } finally {
+      setScraping(false)
+    }
   }
 
   const handleSubmit = async () => {
@@ -347,6 +400,28 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
                   <Link2 size={11} /> Otvori link →
                 </a>
               )}
+
+              {/* Povuci podatke sa URL-a */}
+              <button
+                type="button"
+                onClick={scrapeFromUrl}
+                disabled={scraping || !form.supplierUrl.trim()}
+                className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-[#FF4500]/40 bg-[#FF4500]/10 text-[#FF4500] text-sm font-medium hover:bg-[#FF4500]/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {scraping ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" /> Povlačim podatke...
+                  </>
+                ) : (
+                  <>
+                    <Download size={16} /> Povuci podatke sa linka
+                  </>
+                )}
+              </button>
+              <p className="mt-2 text-xs text-white/30 leading-relaxed">
+                Automatski popunjava naziv, opis, brend, cenu i slike sa stranice dobavljača.
+                Pregledaj i doteraj pre čuvanja. Ako sajt blokira, unesi ručno.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
