@@ -82,7 +82,7 @@ export default async function AdminDashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {recentOrders.map(order => (
+              {recentOrders.map((order: typeof recentOrders[number]) => (
                 <tr key={order.id} className="group hover:bg-white/2 transition-colors">
                   <td className="py-3 pr-4">
                     <Link

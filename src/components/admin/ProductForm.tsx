@@ -272,7 +272,7 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
     { key: 'seo', label: 'SEO' },
   ] as const
 
-  const inp = "w-full bg-white/4 border border-white/8 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-[#FF4500]/40 transition-colors"
+  const inp = "w-full bg-[#16161f] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-[#FF4500]/40 transition-colors"
   const label = "text-xs text-white/40 mb-1.5 block uppercase tracking-wider"
 
   return (

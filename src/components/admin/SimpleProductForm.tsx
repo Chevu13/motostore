@@ -171,6 +171,9 @@ export default function SimpleProductForm() {
               <input
                 value={supplierUrl}
                 onChange={(e) => setSupplierUrl(e.target.value)}
+                onBlur={() => {
+                  if (supplierUrl.trim().startsWith('http') && !scraped && !scraping) scrape()
+                }}
                 placeholder="https://www.louis.de/..."
                 className={`${inp} pl-9`}
               />

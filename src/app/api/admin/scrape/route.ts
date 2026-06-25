@@ -168,6 +168,35 @@ export async function POST(request: NextRequest) {
     const ogImg = $('meta[property="og:image"]').attr('content')
     if (ogImg && !data.images.includes(ogImg)) data.images.unshift(ogImg)
 
+    // 2b) Pokupi SVE slike proizvoda iz galerije (img src, lazy-load atributi, srcset)
+    const imgAttrs = ['src', 'data-src', 'data-zoom-image', 'data-image', 'data-large_image', 'data-lazy', 'data-original']
+    $('img').each((_, el) => {
+      const $el = $(el)
+      for (const attr of imgAttrs) {
+        let src = $el.attr(attr)
+        if (!src) continue
+        // srcset: uzmi najveću
+        if (attr === 'src' && $el.attr('srcset')) {
+          const srcset = $el.attr('srcset')!
+          const last = srcset.split(',').pop()?.trim().split(' ')[0]
+          if (last) src = last
+        }
+        if (src && src.startsWith('http')) {
+          // filtriraj sitne ikonice/logoe/placeholder po imenu
+          const low = src.toLowerCase()
+          if (low.includes('logo') || low.includes('icon') || low.includes('sprite') || low.includes('placeholder') || low.includes('flag')) continue
+          data.images.push(src)
+        }
+      }
+    })
+    // srcset zaseban prolaz (galerije često koriste samo srcset)
+    $('img[srcset], source[srcset]').each((_, el) => {
+      const srcset = $(el).attr('srcset')
+      if (!srcset) return
+      const best = srcset.split(',').map(s => s.trim().split(' ')[0]).filter(u => u.startsWith('http')).pop()
+      if (best) data.images.push(best)
+    })
+
     if (!data.priceEur) {
       const ogPrice = $('meta[property="product:price:amount"]').attr('content')
       if (ogPrice) {
@@ -176,10 +205,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 3) Očisti i ograniči slike
+    // 3) Očisti, deduplikuj i ograniči slike (do 12)
     data.images = Array.from(new Set(data.images))
       .filter((u) => u && u.startsWith('http'))
-      .slice(0, 8)
+      .slice(0, 12)
 
     // 3b) Detekcija kategorije — iz naziva + URL-a + breadcrumb-a
     const breadcrumb = $('[class*="breadcrumb"], nav[aria-label*="readcrumb"]').text()
