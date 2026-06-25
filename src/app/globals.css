@@ -248,3 +248,20 @@
   background: radial-gradient(ellipse, rgba(230,57,70,0.03) 0%, transparent 70%);
   animation: glow-pulse 8s ease-in-out infinite reverse;
 }
+
+/* Popravka: Chrome autofill je pravio bela polja sa nevidljivim tekstom */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0px 1000px #16161f inset !important;
+  caret-color: #ffffff !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Osiguraj vidljiv tekst u svim admin input poljima */
+.admin-input, input[type="text"], input[type="number"], input[type="email"], input[type="password"], input[type="url"], textarea {
+  color: #ffffff;
+}

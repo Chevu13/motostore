@@ -17,9 +17,42 @@ interface ScrapedProduct {
   supplierPriceRsd: number | null
   suggestedPriceRsd: number | null
   images: string[]
+  sizes: string[]
+  categorySlug: string | null
   supplierName: string | null
   supplierUrl: string
   source: string
+}
+
+// Mapiranje ključnih reči (DE/EN/SR) na tvoje kategorije
+const CATEGORY_KEYWORDS: { slug: string; words: string[] }[] = [
+  { slug: 'kacige', words: ['helm', 'helmet', 'kaciga', 'kacig', 'integral', 'jethelm', 'modular', 'klapphelm'] },
+  { slug: 'jakne', words: ['jacke', 'jacket', 'jakna', 'jakn', 'blouson', 'textiljacke', 'lederjacke'] },
+  { slug: 'pantalone', words: ['hose', 'pant', 'trouser', 'pantalone', 'pantalon', 'jeans', 'lederhose', 'textilhose'] },
+  { slug: 'cizme', words: ['stiefel', 'boot', 'schuh', 'cizma', 'cizme', 'shoe', 'sneaker'] },
+]
+
+function detectCategory(text: string): string | null {
+  const t = text.toLowerCase()
+  for (const cat of CATEGORY_KEYWORDS) {
+    if (cat.words.some((w) => t.includes(w))) return cat.slug
+  }
+  return null
+}
+
+function extractSizes(text: string): string[] {
+  const found = new Set<string>()
+  // Slovne veličine
+  const letterSizes = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL']
+  // Tražimo izolovane veličine (sa razmakom/zarezom okolo)
+  for (const sz of letterSizes) {
+    const re = new RegExp(`(^|[\\s,>\\(\\[])${sz}([\\s,<\\)\\]]|$)`, 'i')
+    if (re.test(text)) found.add(sz)
+  }
+  // Numeričke (npr. 38-48 za čizme/odeću)
+  const numMatches = text.match(/\b(3[6-9]|4[0-9]|5[0-6])\b/g)
+  if (numMatches) numMatches.slice(0, 12).forEach((n) => found.add(n))
+  return Array.from(found).slice(0, 16)
 }
 
 function hostToSupplierName(url: string): string {
@@ -79,6 +112,8 @@ export async function POST(request: NextRequest) {
       supplierPriceRsd: null,
       suggestedPriceRsd: null,
       images: [],
+      sizes: [],
+      categorySlug: null,
       supplierName: hostToSupplierName(url),
       supplierUrl: url,
       source: '',
@@ -143,6 +178,19 @@ export async function POST(request: NextRequest) {
     data.images = Array.from(new Set(data.images))
       .filter((u) => u && u.startsWith('http'))
       .slice(0, 8)
+
+    // 3b) Detekcija kategorije — iz naziva + URL-a + breadcrumb-a
+    const breadcrumb = $('[class*="breadcrumb"], nav[aria-label*="readcrumb"]').text()
+    const categoryText = `${data.name || ''} ${url} ${breadcrumb}`
+    data.categorySlug = detectCategory(categoryText)
+
+    // 3c) Izvlačenje veličina — iz JSON-LD ofera, select opcija i teksta
+    const sizeText: string[] = []
+    $('select option, [class*="size"], [class*="groesse"], [data-size]').each((_, el) => {
+      const t = $(el).text().trim()
+      if (t && t.length <= 6) sizeText.push(t)
+    })
+    data.sizes = extractSizes(sizeText.join(' ') + ' ' + (data.description || ''))
 
     // 4) Izračunaj nabavnu i predloženu prodajnu cenu
     if (data.priceEur) {
