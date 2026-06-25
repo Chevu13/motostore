@@ -227,31 +227,35 @@ export default function SimpleProductForm() {
           />
         </div>
 
+        {/* KATEGORIJA — uvek vidljiva (obavezno) */}
+        <div>
+          <label className={lbl}>Kategorija *</label>
+          <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className={inp}>
+            <option value="">Izaberi kategoriju</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id} className="bg-gray-900">
+                {c.name}
+              </option>
+            ))}
+          </select>
+          {scraped && categoryId && (
+            <p className="mt-1.5 text-xs text-emerald-400 flex items-center gap-1">
+              <Check size={11} /> automatski prepoznato — proveri da je tačno
+            </p>
+          )}
+        </div>
+
         {/* AUTO-POPUNJENO — prikaz za proveru */}
-        {scraped && (
+        {(scraped || brand || sizes.length > 0 || images.length > 0) && (
           <div className="rounded-xl border border-[#FF4500]/20 bg-[#FF4500]/5 p-4 space-y-4">
             <p className="text-xs uppercase tracking-wider text-[#FF4500] flex items-center gap-1.5">
-              <Check size={13} /> Automatski povučeno — proveri i doteraj
+              <Check size={13} /> Povučeno sa linka — proveri i doteraj
             </p>
 
-            <div className="grid grid-cols-2 gap-4">
-              {/* Kategorija */}
-              <div>
-                <label className={lbl}>Kategorija *</label>
-                <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className={inp}>
-                  <option value="">Izaberi</option>
-                  {categories.map((c) => (
-                    <option key={c.id} value={c.id} className="bg-gray-900">
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {/* Brend */}
-              <div>
-                <label className={lbl}>Brend</label>
-                <input value={brand} onChange={(e) => setBrand(e.target.value)} placeholder="—" className={inp} />
-              </div>
+            {/* Brend */}
+            <div>
+              <label className={lbl}>Brend</label>
+              <input value={brand} onChange={(e) => setBrand(e.target.value)} placeholder="—" className={inp} />
             </div>
 
             {/* Veličine */}

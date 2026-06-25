@@ -80,17 +80,19 @@ export async function POST(request: NextRequest) {
     try {
       const res = await fetch(url, {
         headers: {
+          // Neki sajtovi blokiraju botove ali puštaju Googlebot
           'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36',
+            'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
           'Accept-Language': 'de-DE,de;q=0.9,en;q=0.8',
-          Accept: 'text/html,application/xhtml+xml',
+          Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         },
-        // 15s timeout preko AbortController
         signal: AbortSignal.timeout(15000),
       })
       if (!res.ok) {
         return NextResponse.json(
-          { error: `Sajt je vratio status ${res.status}. Moguće da blokira automatske zahteve.` },
+          {
+            error: `Sajt je vratio status ${res.status} — verovatno blokira automatske zahteve (Cloudflare). Popuni ručno: izaberi kategoriju, unesi cenu i dodaj slike u izmeni proizvoda.`,
+          },
           { status: 502 },
         )
       }
