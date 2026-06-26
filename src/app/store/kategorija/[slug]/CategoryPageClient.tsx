@@ -115,7 +115,7 @@ export default function CategoryPageClient({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
               >
-                <Link href={`/proizvod/${product.slug}`} className="product-card block group">
+                <Link href={`/store/proizvod/${product.slug}`} className="product-card block group">
                   <div className="relative aspect-[4/3] overflow-hidden rounded-t-xl bg-[#1a1a24]">
                     {product.images[0] ? (
                       <Image

@@ -60,7 +60,7 @@ export default function CartPage() {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <Link href={`/proizvod/${item.slug}`} className="text-white font-semibold hover:text-moto-orange transition-colors line-clamp-1">
+                  <Link href={`/store/proizvod/${item.slug}`} className="text-white font-semibold hover:text-moto-orange transition-colors line-clamp-1">
                     {item.name}
                   </Link>
                   {item.variant && <p className="text-gray-500 text-sm">Veličina: {item.variant}</p>}
