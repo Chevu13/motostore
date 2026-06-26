@@ -62,6 +62,45 @@ function detectBrand(name: string): string | null {
   return null
 }
 
+// Očisti tipično đubre iz naziva sa nemačkih shopova
+function cleanName(name: string): string {
+  return name
+    .replace(/\s*\|\s*.*$/, '')
+    .replace(/\s*-\s*(POLO Motorrad|Louis|FC-Moto|Hein Gericke|XLmoto).*$/i, '')
+    .replace(/\bonline\s+kaufen\b/gi, '')
+    .replace(/\bkaufen\b/gi, '')
+    .replace(/\bbei\s+(POLO Motorrad|Louis|FC-Moto)\b/gi, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+}
+
+// Prevod DE -> SR preko besplatnog Google Translate endpoint-a (bez ključa).
+// Ako padne, vraća original.
+async function translateToSerbian(text: string): Promise<string> {
+  if (!text || !text.trim()) return text
+  const input = text.slice(0, 4500)
+  try {
+    const url =
+      'https://translate.googleapis.com/translate_a/single?client=gtx&sl=de&tl=sr&dt=t&q=' +
+      encodeURIComponent(input)
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0' },
+      signal: AbortSignal.timeout(10000),
+    })
+    if (!res.ok) return text
+    const json = await res.json()
+    if (Array.isArray(json) && Array.isArray(json[0])) {
+      const translated = json[0]
+        .map((seg: unknown[]) => (Array.isArray(seg) ? seg[0] : ''))
+        .join('')
+      return translated || text
+    }
+    return text
+  } catch {
+    return text
+  }
+}
+
 function extractSizes(text: string): string[] {
   const found = new Set<string>()
   // Slovne veličine
@@ -259,12 +298,12 @@ export async function POST(request: NextRequest) {
       .filter((u) => u && u.startsWith('http'))
       .slice(0, 12)
 
-    // 3b) Detekcija kategorije — iz naziva + URL-a + breadcrumb-a
+    // 3b) Detekcija kategorije — iz naziva + URL-a + breadcrumb-a (PRE prevoda, na nemačkom)
     const breadcrumb = $('[class*="breadcrumb"], nav[aria-label*="readcrumb"]').text()
     const categoryText = `${data.name || ''} ${url} ${breadcrumb}`
     data.categorySlug = detectCategory(categoryText)
 
-    // 3c) Izvlačenje veličina — iz JSON-LD ofera, select opcija i teksta
+    // 3c) Izvlačenje veličina
     const sizeText: string[] = []
     $('select option, [class*="size"], [class*="groesse"], [data-size]').each((_, el) => {
       const t = $(el).text().trim()
@@ -272,11 +311,9 @@ export async function POST(request: NextRequest) {
     })
     data.sizes = extractSizes(sizeText.join(' ') + ' ' + (data.description || ''))
 
-    // 4) Izračunaj nabavnu i predloženu prodajnu cenu
-    if (data.priceEur) {
-      data.supplierPriceRsd = Math.round(data.priceEur * EUR_TO_RSD)
-      // predlog prodajne: marža pa zaokruženo na 100 RSD
-      data.suggestedPriceRsd = Math.round((data.supplierPriceRsd * DEFAULT_MARGIN) / 100) * 100
+    // Brend fallback iz naziva (PRE prevoda)
+    if (!data.brand && data.name) {
+      data.brand = detectBrand(data.name)
     }
 
     if (!data.name) {
@@ -289,6 +326,21 @@ export async function POST(request: NextRequest) {
         { status: 422 },
       )
     }
+
+    // 4) Izračunaj nabavnu i predloženu prodajnu cenu
+    if (data.priceEur) {
+      data.supplierPriceRsd = Math.round(data.priceEur * EUR_TO_RSD)
+      data.suggestedPriceRsd = Math.round((data.supplierPriceRsd * DEFAULT_MARGIN) / 100) * 100
+    }
+
+    // 5) Očisti naziv pa prevedi naziv i opis na srpski
+    if (data.name) data.name = cleanName(data.name)
+    const [trName, trDesc] = await Promise.all([
+      translateToSerbian(data.name || ''),
+      translateToSerbian(data.description || ''),
+    ])
+    data.name = trName || data.name
+    data.description = trDesc || data.description
 
     return NextResponse.json({ product: data })
   } catch (error) {
