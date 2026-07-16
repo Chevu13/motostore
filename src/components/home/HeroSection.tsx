@@ -15,11 +15,22 @@ export default function HeroSection() {
           className="w-full h-full object-cover object-center"
         />
         {/* Dark overlay - stronger on left for text, transparent on right */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0F] via-[#0A0A0F]/80 to-[#0A0A0F]/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0F] via-transparent to-[#0A0A0F]/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0B0B10] via-[#0B0B10]/80 to-[#0B0B10]/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B10] via-transparent to-[#0B0B10]/20" />
         {/* Orange accent glow */}
-        <div className="absolute bottom-0 left-0 w-[500px] h-[400px] bg-[#FF4500]/15 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute top-1/4 left-1/3 w-[300px] h-[300px] bg-[#FF4500]/8 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[400px] bg-[#FF4B1F]/15 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/4 left-1/3 w-[300px] h-[300px] bg-[#FF4B1F]/8 blur-[100px] rounded-full pointer-events-none" />
+        {/* Brand signature: acceleration stripes — suptilne kose linije udesno */}
+        <svg
+          className="absolute right-0 top-0 h-full w-auto opacity-[0.07] pointer-events-none hidden lg:block"
+          viewBox="0 0 400 800"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path d="M120 800 L180 800 L300 200 L240 200 Z" fill="#FF4B1F" />
+          <path d="M220 800 L280 800 L420 100 L360 100 Z" fill="#FF4B1F" />
+          <path d="M20 800 L80 800 L180 320 L120 320 Z" fill="#F6F4F1" />
+        </svg>
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-24">
@@ -39,8 +50,8 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-6xl md:text-8xl font-black uppercase leading-none mb-6"
-            style={{ fontFamily: 'Barlow Condensed, sans-serif' }}
+            className="text-6xl md:text-8xl font-black uppercase leading-[0.95] mb-6"
+            style={{ fontFamily: 'Barlow Condensed, sans-serif', letterSpacing: '-0.015em' }}
           >
             <span className="text-white">Opremi se.</span>
             <br />
@@ -80,7 +91,7 @@ export default function HeroSection() {
           >
             {[
               { icon: Shield, label: 'CE sertifikovana oprema', sub: 'zaštita po EU standardima' },
-              { icon: Truck, label: 'Dostava 2–5 dana', sub: 'na kućnu adresu' },
+              { icon: Truck, label: 'Dostava 7–14 dana', sub: 'na kućnu adresu' },
               { icon: Zap, label: 'Pouzeće', sub: 'bez online plaćanja' },
             ].map(({ icon: Icon, label, sub }) => (
               <div key={label} className="flex items-center gap-3 glass px-4 py-3 rounded-xl border border-white/5">

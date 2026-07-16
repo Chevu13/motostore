@@ -35,9 +35,9 @@ export default function RootLayout({
         />
         <style dangerouslySetInnerHTML={{ __html: `
           /* Instant fallback so buttons/text are visible before fonts load */
-          .btn-moto { background: #FF4500 !important; color: #fff !important; }
-          .btn-outline-moto { color: #FF4500 !important; border-color: rgba(255,69,0,0.6) !important; }
-          .gradient-text { color: #FF4500; }
+          .btn-moto { background: #FF4B1F !important; color: #fff !important; }
+          .btn-outline-moto { color: #FF4B1F !important; border-color: rgba(255,75,31,0.6) !important; }
+          .gradient-text { color: #FF4B1F; }
         `}} />
       </head>
       <body>

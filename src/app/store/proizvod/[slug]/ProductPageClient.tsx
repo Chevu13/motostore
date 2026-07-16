@@ -104,7 +104,7 @@ export default function ProductPageClient({ product, similar }: { product: Produ
             )}
             {discount > 0 && (
               <span className="absolute top-4 left-4 px-3 py-1.5 text-white text-sm font-black rounded-lg"
-                style={{ background: 'linear-gradient(135deg,#FF4500,#CC2200)' }}>
+                style={{ background: 'linear-gradient(135deg,#FF4B1F,#CC2200)' }}>
                 -{discount}%
               </span>
             )}
@@ -146,9 +146,9 @@ export default function ProductPageClient({ product, similar }: { product: Produ
 
           {/* Stock */}
           <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold mb-5 border ${
-            product.stockStatus === 'IN_STOCK' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-            product.stockStatus === 'LOW_STOCK' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
-            'bg-red-500/10 text-red-400 border-red-500/20'
+            product.stockStatus === 'IN_STOCK' ? 'bg-[#3FAE6A]/10 text-[#3FAE6A] border-[#3FAE6A]/25' :
+            product.stockStatus === 'LOW_STOCK' ? 'bg-[#E8A23A]/12 text-[#E8A23A] border-[#E8A23A]/30' :
+            'bg-[#E5484D]/12 text-[#E5484D] border-[#E5484D]/30'
           }`}>
             {product.stockStatus === 'IN_STOCK' ? <CheckCircle size={14} /> : <AlertTriangle size={14} />}
             {STOCK_STATUS_LABELS[product.stockStatus]}
@@ -175,7 +175,7 @@ export default function ProductPageClient({ product, similar }: { product: Produ
                       size.stock === 0
                         ? 'border-white/5 text-white/20 cursor-not-allowed line-through'
                         : selectedSize === size.value
-                        ? 'border-orange-500 bg-orange-500/15 text-white shadow-[0_0_15px_rgba(255,69,0,0.2)]'
+                        ? 'border-orange-500 bg-orange-500/15 text-white shadow-[0_0_15px_rgba(255,75,31,0.2)]'
                         : 'border-white/10 text-white/60 hover:border-white/30 hover:text-white'
                     }`}
                   >
@@ -216,7 +216,7 @@ export default function ProductPageClient({ product, similar }: { product: Produ
           <div className="grid grid-cols-3 gap-3">
             {[
               { icon: Shield, text: 'CE sertifikovano' },
-              { icon: Package, text: 'Dostava 2-5 dana' },
+              { icon: Package, text: 'Dostava 7-14 dana' },
               { icon: CheckCircle, text: 'Pouzeće' },
             ].map(({ icon: Icon, text }) => (
               <div key={text} className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-white/[0.06] text-center" style={{ background: 'rgba(255,255,255,0.03)' }}>

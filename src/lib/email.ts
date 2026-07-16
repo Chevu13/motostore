@@ -42,24 +42,24 @@ function baseEmailLayout(content: string, title: string): string {
   <title>${title}</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0A0A0F; color: #e5e7eb; font-family: 'Segoe UI', sans-serif; }
+    body { background: #0B0B10; color: #e5e7eb; font-family: 'Segoe UI', sans-serif; }
     .wrapper { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background: linear-gradient(135deg, #FF4500, #E63946); padding: 30px; border-radius: 12px 12px 0 0; text-align: center; }
+    .header { background: linear-gradient(135deg, #FF4B1F, #E5484D); padding: 30px; border-radius: 12px 12px 0 0; text-align: center; }
     .header h1 { color: #fff; font-size: 28px; font-weight: 800; letter-spacing: 2px; }
     .header p { color: rgba(255,255,255,0.8); margin-top: 5px; }
     .body { background: #111118; padding: 30px; border: 1px solid rgba(255,255,255,0.1); }
-    .footer { background: #0A0A0F; padding: 20px; text-align: center; border-radius: 0 0 12px 12px; border: 1px solid rgba(255,255,255,0.05); border-top: none; }
+    .footer { background: #0B0B10; padding: 20px; text-align: center; border-radius: 0 0 12px 12px; border: 1px solid rgba(255,255,255,0.05); border-top: none; }
     .footer p { color: #6b7280; font-size: 12px; }
-    .btn { display: inline-block; background: linear-gradient(135deg, #FF4500, #E63946); color: #fff; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 700; margin: 20px 0; }
+    .btn { display: inline-block; background: linear-gradient(135deg, #FF4B1F, #E5484D); color: #fff; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 700; margin: 20px 0; }
     .table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-    .table th { background: rgba(255,69,0,0.2); color: #FF4500; padding: 10px; text-align: left; font-size: 12px; text-transform: uppercase; }
+    .table th { background: rgba(255,75,31,0.2); color: #FF4B1F; padding: 10px; text-align: left; font-size: 12px; text-transform: uppercase; }
     .table td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
-    .total-row td { font-weight: 700; color: #FF4500; font-size: 16px; border-top: 2px solid rgba(255,69,0,0.3); }
+    .total-row td { font-weight: 700; color: #FF4B1F; font-size: 16px; border-top: 2px solid rgba(255,75,31,0.3); }
     .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
     .info-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 15px; }
     .info-box label { color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
     .info-box p { color: #e5e7eb; margin-top: 4px; font-weight: 500; }
-    .status-badge { display: inline-block; background: rgba(255,69,0,0.2); color: #FF4500; border: 1px solid rgba(255,69,0,0.3); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .status-badge { display: inline-block; background: rgba(255,75,31,0.2); color: #FF4B1F; border: 1px solid rgba(255,75,31,0.3); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
     h2 { color: #fff; font-size: 18px; margin: 20px 0 10px; }
     p { color: #9ca3af; line-height: 1.6; }
   </style>
@@ -97,8 +97,8 @@ export async function sendOrderConfirmationEmail(order: Order): Promise<void> {
     <h2>✅ Porudžbina primljena!</h2>
     <p>Poštovani ${order.firstName}, hvala na porudžbini! Vaša narudžbina je uspešno zabeležena i uskoro ćemo je potvrditi.</p>
     
-    <div style="background: rgba(255,69,0,0.1); border: 1px solid rgba(255,69,0,0.3); border-radius: 8px; padding: 15px; margin: 20px 0;">
-      <p style="color: #FF4500; font-weight: 700; font-size: 18px;">Broj narudžbine: ${order.orderNumber}</p>
+    <div style="background: rgba(255,75,31,0.1); border: 1px solid rgba(255,75,31,0.3); border-radius: 8px; padding: 15px; margin: 20px 0;">
+      <p style="color: #FF4B1F; font-weight: 700; font-size: 18px;">Broj narudžbine: ${order.orderNumber}</p>
       <span class="status-badge">Naručeno</span>
     </div>
 
@@ -144,8 +144,8 @@ export async function sendOrderConfirmationEmail(order: Order): Promise<void> {
     </div>
     ` : ''}
 
-    <p style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 8px; border-left: 3px solid #FF4500;">
-      Dostava se vrši putem kurirske službe. Rok isporuke je 2-5 radnih dana. 
+    <p style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 8px; border-left: 3px solid #FF4B1F;">
+      Dostava se vrši putem kurirske službe. Rok isporuke je 7-14 radnih dana. 
       Pratite status vaše narudžbine na našem sajtu pomoću broja narudžbine i email adrese.
     </p>
   `
@@ -171,8 +171,8 @@ export async function sendAdminOrderNotificationEmail(order: Order): Promise<voi
     <h2>🔔 Nova narudžbina!</h2>
     <p>Stigla je nova narudžbina. Proverite admin panel i potvrdite je.</p>
     
-    <div style="background: rgba(255,69,0,0.1); border: 1px solid rgba(255,69,0,0.3); border-radius: 8px; padding: 15px; margin: 20px 0;">
-      <p style="color: #FF4500; font-weight: 700; font-size: 20px;">${order.orderNumber}</p>
+    <div style="background: rgba(255,75,31,0.1); border: 1px solid rgba(255,75,31,0.3); border-radius: 8px; padding: 15px; margin: 20px 0;">
+      <p style="color: #FF4B1F; font-weight: 700; font-size: 20px;">${order.orderNumber}</p>
       <p style="color: #e5e7eb; font-size: 24px; font-weight: 800; margin-top: 5px;">${formatPrice(order.total)}</p>
     </div>
 
@@ -243,14 +243,14 @@ export async function sendOrderStatusUpdateEmail(
     <h2>📬 Ažuriranje statusa narudžbine</h2>
     <p>Poštovani ${order.firstName}, ažurirali smo status vaše narudžbine.</p>
 
-    <div style="background: rgba(255,69,0,0.1); border: 1px solid rgba(255,69,0,0.3); border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center;">
+    <div style="background: rgba(255,75,31,0.1); border: 1px solid rgba(255,75,31,0.3); border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center;">
       <p style="color: #9ca3af; margin-bottom: 5px;">Broj narudžbine</p>
-      <p style="color: #FF4500; font-weight: 800; font-size: 20px;">${order.orderNumber}</p>
+      <p style="color: #FF4B1F; font-weight: 800; font-size: 20px;">${order.orderNumber}</p>
       <p style="color: #9ca3af; margin: 10px 0 5px;">Novi status</p>
       <span class="status-badge" style="font-size: 16px; padding: 8px 20px;">${statusLabel}</span>
     </div>
 
-    <p style="padding: 15px; background: rgba(255,255,255,0.03); border-radius: 8px; border-left: 3px solid #FF4500;">
+    <p style="padding: 15px; background: rgba(255,255,255,0.03); border-radius: 8px; border-left: 3px solid #FF4B1F;">
       ${message}
     </p>
   `

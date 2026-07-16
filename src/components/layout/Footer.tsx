@@ -1,3 +1,4 @@
+import Logo from '@/components/ui/Logo'
 import Link from 'next/link'
 
 export default function Footer() {
@@ -7,10 +8,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           {/* Brand */}
           <div className="md:col-span-2">
-            <div className="text-3xl font-black uppercase mb-4" style={{ fontFamily: 'Barlow Condensed, sans-serif' }}>
-              <span className="gradient-text">Moto</span>
-              <span className="text-white">Store</span>
-              <span style={{ color: '#FF4500', opacity: 0.6 }}>.rs</span>
+            <div className="mb-4">
+              <Logo variant="full" scheme="dark" size={28} />
             </div>
             <p className="text-white/35 text-sm leading-relaxed font-light max-w-xs">
               Premium moto oprema za ozbiljne vozače. Originalni brendovi, brza dostava, plaćanje pouzećem.
@@ -81,7 +80,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="pt-8 border-t border-white/[0.05] flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-white/20 text-xs font-light">
-            © 2024 MotoStore.rs — Sva prava zadržana
+            © 2026 MotoStore.rs — Sva prava zadržana
           </p>
           <div className="flex items-center gap-2">
             {['VISA', 'MC', 'COD'].map((method) => (

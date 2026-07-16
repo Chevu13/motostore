@@ -128,10 +128,10 @@ export default function TrackingPage() {
                     <div key={step} className={`flex items-center gap-4 transition-all ${isCompleted ? 'opacity-100' : 'opacity-30'}`}>
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 flex-shrink-0 transition-all ${
                         isCurrent ? 'border-moto-orange bg-moto-orange/20 scale-110' :
-                        isCompleted ? 'border-green-500 bg-green-500/10' :
+                        isCompleted ? 'border-[#3FAE6A] bg-[#3FAE6A]/10' :
                         'border-white/10 bg-white/5'
                       }`}>
-                        <Icon size={16} className={isCurrent ? 'text-moto-orange' : isCompleted ? 'text-green-400' : 'text-gray-600'} />
+                        <Icon size={16} className={isCurrent ? 'text-moto-orange' : isCompleted ? 'text-[#3FAE6A]' : 'text-gray-600'} />
                       </div>
                       <div>
                         <p className={`font-semibold ${isCurrent ? 'text-moto-orange' : isCompleted ? 'text-white' : 'text-gray-600'}`}>

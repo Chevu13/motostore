@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
@@ -33,8 +33,13 @@ export default function CheckoutPage() {
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>()
 
+  useEffect(() => {
+    if (items.length === 0 && !orderNumber) {
+      router.push('/store/korpa')
+    }
+  }, [items.length, orderNumber, router])
+
   if (items.length === 0 && !orderNumber) {
-    router.push('/store/korpa')
     return null
   }
 
@@ -77,8 +82,8 @@ export default function CheckoutPage() {
     return (
       <div className="container mx-auto px-4 py-20 text-center max-w-xl">
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', damping: 15 }}>
-          <div className="w-24 h-24 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle size={48} className="text-green-400" />
+          <div className="w-24 h-24 bg-[#3FAE6A]/10 border border-[#3FAE6A]/35 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle size={48} className="text-[#3FAE6A]" />
           </div>
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
@@ -256,7 +261,7 @@ export default function CheckoutPage() {
             </div>
             <div className="flex justify-between text-gray-400">
               <span>Dostava</span>
-              <span className={shipping === 0 ? 'text-green-400 font-semibold' : ''}>
+              <span className={shipping === 0 ? 'text-[#3FAE6A] font-semibold' : ''}>
                 {shipping === 0 ? 'BESPLATNO' : formatPrice(shipping)}
               </span>
             </div>

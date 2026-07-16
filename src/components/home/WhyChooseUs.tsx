@@ -8,25 +8,25 @@ const features = [
     icon: Shield,
     title: 'CE Sertifikovano',
     desc: 'Sva zaštitna oprema ispunjava EU standarde. Vaša bezbednost je prioritet.',
-    color: '#FF4500',
+    color: '#FF4B1F',
   },
   {
     icon: Truck,
     title: 'Brza dostava',
-    desc: 'Isporuka 2–5 radnih dana. Besplatno za narudžbine preko 15.000 RSD.',
+    desc: 'Isporuka 7–14 radnih dana. Besplatno za narudžbine preko 15.000 RSD.',
     color: '#FF6B35',
   },
   {
     icon: CreditCard,
     title: 'Pouzeće',
     desc: 'Plaćate kuriru pri preuzimanju. Nema online plaćanja, nema rizika.',
-    color: '#E63946',
+    color: '#E5484D',
   },
   {
     icon: Headphones,
     title: 'Podrška 7/7',
     desc: 'Naš tim je tu za vas svaki dan. Pozovite ili pišite u bilo kom trenutku.',
-    color: '#FF4500',
+    color: '#FF4B1F',
   },
   {
     icon: Award,
@@ -38,7 +38,7 @@ const features = [
     icon: RotateCcw,
     title: 'Povraćaj robe',
     desc: '14 dana za povraćaj bez pitanja. Vaše zadovoljstvo je naša garancija.',
-    color: '#E63946',
+    color: '#E5484D',
   },
 ]
 

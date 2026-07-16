@@ -1,5 +1,5 @@
-import ProductForm from '@/components/admin/ProductForm'
+import SimpleProductForm from '@/components/admin/SimpleProductForm'
 
 export default function NewProductPage() {
-  return <ProductForm mode="create" />
+  return <SimpleProductForm />
 }

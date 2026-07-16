@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAdminSession } from '@/lib/auth'
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     await requireAdminSession()
     const product = await prisma.product.findUnique({
-      where: { id: params.id },
+      where: { id: id },
       include: {
         category: true,
         images: { orderBy: { sortOrder: 'asc' } },
@@ -24,8 +25,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     await requireAdminSession()
     const body = await request.json()
     const {
@@ -55,7 +57,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
     // Handle images replacement
     if (images !== undefined) {
-      await prisma.productImage.deleteMany({ where: { productId: params.id } })
+      await prisma.productImage.deleteMany({ where: { productId: id } })
       updateData.images = {
         create: images.map((img: { url: string; alt?: string; isPrimary?: boolean }, i: number) => ({
           url: img.url,
@@ -68,7 +70,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
     // Handle specifications replacement
     if (specifications !== undefined) {
-      await prisma.productSpec.deleteMany({ where: { productId: params.id } })
+      await prisma.productSpec.deleteMany({ where: { productId: id } })
       updateData.specifications = {
         create: specifications.map((s: { label: string; value: string }, i: number) => ({
           label: s.label,
@@ -80,7 +82,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
     // Handle variants replacement
     if (variants !== undefined) {
-      await prisma.productVariant.deleteMany({ where: { productId: params.id } })
+      await prisma.productVariant.deleteMany({ where: { productId: id } })
       updateData.variants = {
         create: variants.map((v: { type: string; value: string; priceAdjust?: number; stock?: number }) => ({
           type: v.type,
@@ -92,7 +94,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     }
 
     const product = await prisma.product.update({
-      where: { id: params.id },
+      where: { id: id },
       data: updateData,
       include: {
         category: true,
@@ -112,10 +114,11 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     await requireAdminSession()
-    await prisma.product.delete({ where: { id: params.id } })
+    await prisma.product.delete({ where: { id: id } })
     return NextResponse.json({ success: true })
   } catch (error) {
     if (error instanceof Error && error.message === 'Unauthorized') {

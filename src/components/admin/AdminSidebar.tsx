@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Logo from '@/components/ui/Logo'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { LayoutDashboard, Package, ShoppingBag, Tag, Settings, LogOut, Menu, X, BarChart3 } from 'lucide-react'
@@ -29,9 +30,7 @@ export default function AdminSidebar({ adminEmail }: { adminEmail: string }) {
     <div className="flex flex-col h-full">
       <div className="px-6 py-5 border-b border-white/10">
         <Link href="/admin/dashboard">
-          <p className="text-white text-xl font-semibold uppercase tracking-widest" style={{ fontFamily: 'Barlow Condensed, sans-serif' }}>
-            Moto<span className="text-[#FF4500]">Store</span><span className="text-white/30">.rs</span>
-          </p>
+          <Logo variant="full" scheme="dark" size={20} />
           <p className="text-[10px] tracking-[2px] uppercase text-white/25 mt-0.5">Admin panel</p>
         </Link>
       </div>
@@ -46,7 +45,7 @@ export default function AdminSidebar({ adminEmail }: { adminEmail: string }) {
               onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-colors border ${
                 active
-                  ? 'bg-[#FF4500]/10 text-[#FF4500] border-[#FF4500]/20'
+                  ? 'bg-[#FF4B1F]/10 text-[#FF4B1F] border-[#FF4B1F]/20'
                   : 'text-white/40 hover:text-white hover:bg-white/5 border-transparent'
               }`}
             >
@@ -74,8 +73,8 @@ export default function AdminSidebar({ adminEmail }: { adminEmail: string }) {
 
       <div className="p-4 border-t border-white/10">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 rounded-full bg-[#FF4500]/10 border border-[#FF4500]/20 flex items-center justify-center flex-shrink-0">
-            <span className="text-[#FF4500] text-sm font-bold">{adminEmail[0].toUpperCase()}</span>
+          <div className="w-8 h-8 rounded-full bg-[#FF4B1F]/10 border border-[#FF4B1F]/20 flex items-center justify-center flex-shrink-0">
+            <span className="text-[#FF4B1F] text-sm font-bold">{adminEmail[0].toUpperCase()}</span>
           </div>
           <div className="min-w-0">
             <p className="text-white text-xs font-medium truncate">{adminEmail}</p>
@@ -94,14 +93,14 @@ export default function AdminSidebar({ adminEmail }: { adminEmail: string }) {
 
   return (
     <>
-      <aside className="hidden lg:flex w-60 flex-col min-h-screen sticky top-0 bg-[#0A0A0F] border-r border-white/5">
+      <aside className="hidden lg:flex w-60 flex-col min-h-screen sticky top-0 bg-[#0B0B10] border-r border-white/5">
         <SidebarContent />
       </aside>
 
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-2.5 bg-[#0A0A0F] border border-white/10 rounded-xl text-white/60 hover:text-white transition-colors"
+          className="p-2.5 bg-[#0B0B10] border border-white/10 rounded-xl text-white/60 hover:text-white transition-colors"
         >
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
@@ -109,7 +108,7 @@ export default function AdminSidebar({ adminEmail }: { adminEmail: string }) {
 
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-40 flex">
-          <div className="w-60 bg-[#0A0A0F] border-r border-white/10 flex flex-col">
+          <div className="w-60 bg-[#0B0B10] border-r border-white/10 flex flex-col">
             <SidebarContent />
           </div>
           <div className="flex-1 bg-black/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />

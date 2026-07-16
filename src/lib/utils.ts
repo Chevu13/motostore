@@ -16,11 +16,17 @@ export function formatPrice(price: number | string | null | undefined): string {
 }
 
 export function slugify(text: string): string {
+  const cyr: Record<string, string> = {
+    'а':'a','б':'b','в':'v','г':'g','д':'d','ђ':'dj','е':'e','ж':'z','з':'z','и':'i',
+    'ј':'j','к':'k','л':'l','љ':'lj','м':'m','н':'n','њ':'nj','о':'o','п':'p','р':'r',
+    'с':'s','т':'t','ћ':'c','у':'u','ф':'f','х':'h','ц':'c','ч':'c','џ':'dz','ш':'s',
+  }
   return text
     .toLowerCase()
+    .replace(/[\u0400-\u04FF]/g, (ch) => cyr[ch] ?? '')
     .replace(/[čć]/g, 'c')
-    .replace(/[šš]/g, 's')
-    .replace(/[žž]/g, 'z')
+    .replace(/[š]/g, 's')
+    .replace(/[ž]/g, 'z')
     .replace(/[đ]/g, 'd')
     .replace(/[^\w\s-]/g, '')
     .replace(/[\s_-]+/g, '-')

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plus, X, Upload, ArrowLeft, Link2, Image as ImageIcon } from 'lucide-react'
+import { Plus, X, Upload, ArrowLeft, Link2, Image as ImageIcon, Download, Loader2 } from 'lucide-react'
 import { toast } from '@/hooks/use-toast'
 
 interface Category {
@@ -58,6 +58,7 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [urlInput, setUrlInput] = useState('')
+  const [scraping, setScraping] = useState(false)
   const [activeTab, setActiveTab] = useState<'basic' | 'nabavka' | 'images' | 'variants' | 'specs' | 'seo'>('basic')
 
   const [form, setForm] = useState<ProductFormData>({
@@ -163,6 +164,58 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
     update('specifications', form.specifications.filter((_, idx) => idx !== i))
   }
 
+  // Povlačenje podataka sa dobavljačevog URL-a
+  const scrapeFromUrl = async () => {
+    const targetUrl = form.supplierUrl.trim()
+    if (!targetUrl || !targetUrl.startsWith('http')) {
+      toast({ title: 'Unesi ispravan URL dobavljača', variant: 'destructive' })
+      return
+    }
+    setScraping(true)
+    try {
+      const res = await fetch('/api/admin/scrape', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: targetUrl }),
+      })
+      const json = await res.json()
+
+      if (!res.ok) {
+        toast({ title: 'Povlačenje nije uspelo', description: json.error || 'Probaj ručni unos', variant: 'destructive' })
+        return
+      }
+
+      const p = json.product
+      // Popuni samo polja koja su prazna ili ih korisnik želi prepisati
+      setForm(prev => ({
+        ...prev,
+        name: prev.name || p.name || '',
+        description: prev.description || p.description || '',
+        brand: prev.brand || p.brand || '',
+        sku: prev.sku || p.sku || '',
+        supplierPriceEur: p.priceEur ? String(p.priceEur) : prev.supplierPriceEur,
+        supplierPrice: p.supplierPriceRsd ? String(p.supplierPriceRsd) : prev.supplierPrice,
+        price: prev.price || (p.suggestedPriceRsd ? String(p.suggestedPriceRsd) : ''),
+        images: [
+          ...prev.images,
+          ...(p.images || [])
+            .filter((u: string) => !prev.images.some(img => img.url === u))
+            .map((u: string) => ({ url: u, alt: p.name || 'slika' })),
+        ],
+      }))
+
+      toast({
+        title: '✓ Podaci povučeni',
+        description: `${p.name?.slice(0, 40) || 'Proizvod'} · ${p.images?.length || 0} slika${p.priceEur ? ` · ${p.priceEur}€` : ''}`,
+        variant: 'success',
+      })
+    } catch (e) {
+      toast({ title: 'Greška pri povlačenju', description: 'Probaj ponovo ili unesi ručno', variant: 'destructive' })
+    } finally {
+      setScraping(false)
+    }
+  }
+
   const handleSubmit = async () => {
     if (!form.name || !form.price || !form.categoryId) {
       toast({ title: 'Nedostaju podaci', description: 'Naziv, cena i kategorija su obavezni', variant: 'destructive' })
@@ -219,7 +272,7 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
     { key: 'seo', label: 'SEO' },
   ] as const
 
-  const inp = "w-full bg-white/4 border border-white/8 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-[#FF4500]/40 transition-colors"
+  const inp = "w-full bg-[#17171D] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-[#FF4B1F]/40 transition-colors"
   const label = "text-xs text-white/40 mb-1.5 block uppercase tracking-wider"
 
   return (
@@ -250,7 +303,7 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
             onClick={() => setActiveTab(tab.key)}
             className={`px-4 py-2.5 text-xs font-medium whitespace-nowrap transition-colors uppercase tracking-wider border-b-2 -mb-px ${
               activeTab === tab.key
-                ? 'text-[#FF4500] border-[#FF4500]'
+                ? 'text-[#FF4B1F] border-[#FF4B1F]'
                 : 'text-white/35 hover:text-white border-transparent'
             }`}
           >
@@ -259,7 +312,7 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
         ))}
       </div>
 
-      <div className="bg-[#0D0D15] border border-white/6 rounded-xl p-6">
+      <div className="bg-[#17171D] border border-white/6 rounded-xl p-6">
 
         {/* BASIC */}
         {activeTab === 'basic' && (
@@ -315,11 +368,11 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
             </div>
             <div className="flex gap-6 pt-2 border-t border-white/5">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={form.isActive} onChange={e => update('isActive', e.target.checked)} className="w-4 h-4 accent-[#FF4500]" />
+                <input type="checkbox" checked={form.isActive} onChange={e => update('isActive', e.target.checked)} className="w-4 h-4 accent-[#FF4B1F]" />
                 <span className="text-sm text-white/70">Aktivan</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={form.isFeatured} onChange={e => update('isFeatured', e.target.checked)} className="w-4 h-4 accent-[#FF4500]" />
+                <input type="checkbox" checked={form.isFeatured} onChange={e => update('isFeatured', e.target.checked)} className="w-4 h-4 accent-[#FF4B1F]" />
                 <span className="text-sm text-white/70">⭐ Prikaži na naslovnoj</span>
               </label>
             </div>
@@ -342,11 +395,33 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
                   href={form.supplierUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-1.5 inline-flex items-center gap-1.5 text-xs text-[#FF4500] hover:text-white transition-colors"
+                  className="mt-1.5 inline-flex items-center gap-1.5 text-xs text-[#FF4B1F] hover:text-white transition-colors"
                 >
                   <Link2 size={11} /> Otvori link →
                 </a>
               )}
+
+              {/* Povuci podatke sa URL-a */}
+              <button
+                type="button"
+                onClick={scrapeFromUrl}
+                disabled={scraping || !form.supplierUrl.trim()}
+                className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-[#FF4B1F]/40 bg-[#FF4B1F]/10 text-[#FF4B1F] text-sm font-medium hover:bg-[#FF4B1F]/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {scraping ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" /> Povlačim podatke...
+                  </>
+                ) : (
+                  <>
+                    <Download size={16} /> Povuci podatke sa linka
+                  </>
+                )}
+              </button>
+              <p className="mt-2 text-xs text-white/30 leading-relaxed">
+                Automatski popunjava naziv, opis, brend, cenu i slike sa stranice dobavljača.
+                Pregledaj i doteraj pre čuvanja. Ako sajt blokira, unesi ručno.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -430,7 +505,7 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
               <label className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed rounded-xl cursor-pointer transition-colors ${
                 uploading
                   ? 'border-white/20 text-white/30'
-                  : 'border-[#FF4500]/30 text-[#FF4500] hover:border-[#FF4500]/60 hover:bg-[#FF4500]/5'
+                  : 'border-[#FF4B1F]/30 text-[#FF4B1F] hover:border-[#FF4B1F]/60 hover:bg-[#FF4B1F]/5'
               }`}>
                 <Upload size={16} />
                 <span className="text-sm font-medium">{uploading ? 'Uploadovanje...' : 'Upload sa kompa'}</span>
@@ -473,7 +548,7 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
                   <div key={i} className="relative group aspect-square bg-white/5 rounded-xl overflow-hidden border border-white/6">
                     <img src={img.url} alt={img.alt} className="w-full h-full object-cover" />
                     {i === 0 && (
-                      <span className="absolute top-1.5 left-1.5 bg-[#FF4500] text-white text-[10px] font-medium px-1.5 py-0.5 rounded">Glavna</span>
+                      <span className="absolute top-1.5 left-1.5 bg-[#FF4B1F] text-[#0B0B10] text-[10px] font-medium px-1.5 py-0.5 rounded">Glavna</span>
                     )}
                     <button
                       onClick={() => removeImage(i)}
@@ -515,7 +590,7 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
             {form.variants.length === 0 && (
               <p className="text-center text-white/25 text-sm py-6">Nema varijanti. Dodajte veličine, boje itd.</p>
             )}
-            <button onClick={addVariant} className="flex items-center gap-2 text-sm text-[#FF4500]/70 hover:text-[#FF4500] transition-colors">
+            <button onClick={addVariant} className="flex items-center gap-2 text-sm text-[#FF4B1F]/70 hover:text-[#FF4B1F] transition-colors">
               <Plus className="w-4 h-4" /> Dodaj varijantu
             </button>
           </div>
@@ -536,7 +611,7 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
             {form.specifications.length === 0 && (
               <p className="text-center text-white/25 text-sm py-6">Nema specifikacija. Dodajte tehničke detalje.</p>
             )}
-            <button onClick={addSpec} className="flex items-center gap-2 text-sm text-[#FF4500]/70 hover:text-[#FF4500] transition-colors">
+            <button onClick={addSpec} className="flex items-center gap-2 text-sm text-[#FF4B1F]/70 hover:text-[#FF4B1F] transition-colors">
               <Plus className="w-4 h-4" /> Dodaj specifikaciju
             </button>
           </div>

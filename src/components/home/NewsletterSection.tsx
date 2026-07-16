@@ -41,9 +41,9 @@ export default function NewsletterSection() {
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="flex items-center justify-center gap-3 text-green-400 font-semibold"
+              className="flex items-center justify-center gap-3 text-[#3FAE6A] font-semibold"
             >
-              <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-[#3FAE6A]/20 flex items-center justify-center">
                 <Check size={16} />
               </div>
               Hvala! Prijaćemo te na listu.

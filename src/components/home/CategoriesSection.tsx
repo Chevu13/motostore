@@ -12,7 +12,7 @@ const CATEGORIES = [
     subtitle: 'Integralne · Modularni · Jet',
     image: '/images/categories/kaciga.jpg',
     badge: 'Bestseler',
-    badgeColor: '#FF4500',
+    badgeColor: '#FF4B1F',
     bgPos: 'center center',
   },
   {
@@ -21,7 +21,7 @@ const CATEGORIES = [
     subtitle: 'Kožne · Tekstilne · Adventure',
     image: '/images/categories/jakna.jpg',
     badge: 'Novo',
-    badgeColor: '#E63946',
+    badgeColor: '#E5484D',
     bgPos: 'center top',
   },
   {
@@ -30,7 +30,7 @@ const CATEGORIES = [
     subtitle: 'Touring · Sport · Adventure',
     image: '/images/categories/pantalona.jpg',
     badge: null,
-    badgeColor: '#FF4500',
+    badgeColor: '#FF4B1F',
     bgPos: 'center center',
   },
   {
@@ -39,7 +39,7 @@ const CATEGORIES = [
     subtitle: 'Touring · Urban · Sport',
     image: '/images/categories/cizme.jpg',
     badge: 'Gore-Tex',
-    badgeColor: '#FF4500',
+    badgeColor: '#FF4B1F',
     bgPos: 'center center',
   },
 ]
@@ -69,7 +69,7 @@ export default function CategoriesSection() {
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] pointer-events-none"
         aria-hidden="true"
       >
-        <div style={{ background: 'radial-gradient(ellipse, rgba(255,69,0,0.05) 0%, transparent 70%)', width: '100%', height: '100%' }} />
+        <div style={{ background: 'radial-gradient(ellipse, rgba(255,75,31,0.05) 0%, transparent 70%)', width: '100%', height: '100%' }} />
       </motion.div>
 
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
@@ -88,7 +88,7 @@ export default function CategoriesSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-xs font-bold uppercase tracking-[0.15em] mb-3"
-              style={{ color: '#FF4500' }}
+              style={{ color: '#FF4B1F' }}
             >
               Kategorije
             </motion.p>
@@ -126,7 +126,7 @@ export default function CategoriesSection() {
             <motion.div key={cat.slug} variants={cardVariant}>
               <Link
                 href={`/store/kategorija/${cat.slug}`}
-                className="group relative block overflow-hidden rounded-2xl"
+                className="group relative block overflow-hidden rounded-lg"
                 style={{ aspectRatio: '3/4' }}
               >
                 {/* Image with parallax scale */}
@@ -190,7 +190,7 @@ export default function CategoriesSection() {
                     className="flex items-center gap-1.5 mt-3"
                     initial={{ opacity: 0, y: 6 }}
                     whileHover={{ opacity: 1, y: 0 }}
-                    style={{ color: '#FF4500' }}
+                    style={{ color: '#FF4B1F' }}
                   >
                     <span className="text-xs font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
                       Pogledaj

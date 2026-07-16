@@ -52,11 +52,22 @@ module.exports = {
         },
         // Custom moto theme colors
         moto: {
-          orange: '#FF4500',
-          red: '#E63946',
-          dark: '#0A0A0F',
-          darker: '#050508',
-          surface: '#111118',
+          orange: '#FF4B1F',   // Racing Orange
+          steel: '#3A3F47',    // sekundarna
+          amber: '#E8A23A',    // akcent / warning
+          ink: '#0B0B10',
+          ink800: '#17171D',
+          graphite: '#3A3B42',
+          'graphite-400': '#8A8B93',
+          'graphite-200': '#D7D6D2',
+          paper: '#F6F4F1',
+          success: '#3FAE6A',
+          error: '#E5484D',
+          // stari aliasi da postojece klase ne puknu:
+          red: '#E5484D',
+          dark: '#0B0B10',
+          darker: '#080810',
+          surface: '#17171D',
           glass: 'rgba(255,255,255,0.05)',
         },
       },
@@ -101,7 +112,7 @@ module.exports = {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-moto': 'linear-gradient(135deg, #FF4500 0%, #E63946 100%)',
+        'gradient-moto': 'linear-gradient(135deg, #FF4B1F 0%, #E8A23A 100%)',
       },
     },
   },

@@ -3,11 +3,12 @@ import { prisma } from '@/lib/prisma'
 import { requireAdminSession } from '@/lib/auth'
 import { sendOrderStatusUpdateEmail } from '@/lib/email'
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     await requireAdminSession()
     const order = await prisma.order.findUnique({
-      where: { id: params.id },
+      where: { id: id },
       include: {
         items: {
           include: {
@@ -27,8 +28,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     await requireAdminSession()
     const body = await request.json()
     const { status, note } = body
@@ -38,11 +40,11 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
     }
 
-    const order = await prisma.order.findUnique({ where: { id: params.id } })
+    const order = await prisma.order.findUnique({ where: { id: id } })
     if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 })
 
     const updatedOrder = await prisma.order.update({
-      where: { id: params.id },
+      where: { id: id },
       data: {
         status,
         statusHistory: { create: { status, note: note || null } },

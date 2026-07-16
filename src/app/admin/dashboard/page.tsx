@@ -3,6 +3,8 @@ import { formatPrice, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '@/lib/uti
 import Link from 'next/link'
 import { ShoppingBag, Package, TrendingUp, Clock, ArrowRight } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AdminDashboard() {
   const [
     totalOrders,
@@ -28,7 +30,7 @@ export default async function AdminDashboard() {
     { label: 'Ukupno porudžbina', value: totalOrders, icon: ShoppingBag, color: 'text-sky-400', border: 'border-sky-500/20', bg: 'bg-sky-500/8' },
     { label: 'Na čekanju', value: pendingOrders, icon: Clock, color: 'text-amber-400', border: 'border-amber-500/20', bg: 'bg-amber-500/8' },
     { label: 'Aktivni proizvodi', value: totalProducts, icon: Package, color: 'text-emerald-400', border: 'border-emerald-500/20', bg: 'bg-emerald-500/8' },
-    { label: 'Ukupan prihod', value: formatPrice(totalRevenue), icon: TrendingUp, color: 'text-[#FF4500]', border: 'border-[#FF4500]/20', bg: 'bg-[#FF4500]/8' },
+    { label: 'Ukupan prihod', value: formatPrice(totalRevenue), icon: TrendingUp, color: 'text-[#FF4B1F]', border: 'border-[#FF4B1F]/20', bg: 'bg-[#FF4B1F]/8' },
   ]
 
   return (
@@ -43,7 +45,7 @@ export default async function AdminDashboard() {
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
         {stats.map(({ label, value, icon: Icon, color, border, bg }) => (
-          <div key={label} className="bg-[#0D0D15] border border-white/6 rounded-xl p-5">
+          <div key={label} className="bg-[#17171D] border border-white/6 rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
               <p className="text-white/40 text-xs uppercase tracking-wider">{label}</p>
               <div className={`w-9 h-9 rounded-lg flex items-center justify-center border ${bg} ${border}`}>
@@ -58,12 +60,12 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Recent orders */}
-      <div className="bg-[#0D0D15] border border-white/6 rounded-xl p-6">
+      <div className="bg-[#17171D] border border-white/6 rounded-xl p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-base font-semibold text-white uppercase tracking-wider" style={{ fontFamily: 'Barlow Condensed, sans-serif' }}>
             Poslednje porudžbine
           </h2>
-          <Link href="/admin/porudzbine" className="flex items-center gap-1 text-[#FF4500] text-xs hover:text-white transition-colors">
+          <Link href="/admin/porudzbine" className="flex items-center gap-1 text-[#FF4B1F] text-xs hover:text-white transition-colors">
             Sve <ArrowRight size={12} />
           </Link>
         </div>
@@ -80,12 +82,12 @@ export default async function AdminDashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {recentOrders.map(order => (
+              {recentOrders.map((order: typeof recentOrders[number]) => (
                 <tr key={order.id} className="group hover:bg-white/2 transition-colors">
                   <td className="py-3 pr-4">
                     <Link
                       href={`/admin/porudzbine/${order.id}`}
-                      className="text-[#FF4500] text-sm font-medium hover:text-white transition-colors"
+                      className="text-[#FF4B1F] text-sm font-medium hover:text-white transition-colors"
                     >
                       {order.orderNumber}
                     </Link>

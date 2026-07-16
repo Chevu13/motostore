@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Logo from '@/components/ui/Logo'
 import { useState, useEffect } from 'react'
 import { ShoppingCart, Menu, X, Search, ChevronDown, Zap } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -51,7 +52,7 @@ export default function Header() {
   return (
     <>
       {/* Top bar */}
-      <div className="bg-gradient-to-r from-[#FF4500] via-[#CC2200] to-[#E63946] text-white text-center py-2.5 text-[11px] font-bold tracking-[0.15em] uppercase relative overflow-hidden">
+      <div className="bg-gradient-to-r from-[#FF4B1F] via-[#CC2200] to-[#E5484D] text-white text-center py-2.5 text-[11px] font-bold tracking-[0.15em] uppercase relative overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.08)_50%,transparent_100%)] animate-shimmer" />
         <span className="relative flex items-center justify-center gap-3">
           <Zap size={11} className="opacity-80" />
@@ -62,19 +63,15 @@ export default function Header() {
 
       <header className={`sticky top-0 z-50 transition-all duration-500 ${
         scrolled
-          ? 'bg-[#08080E]/90 backdrop-blur-xl border-b border-white/[0.06] shadow-[0_8px_32px_rgba(0,0,0,0.4)]'
-          : 'bg-[#08080E]'
+          ? 'bg-[#0B0B10]/90 backdrop-blur-xl border-b border-white/[0.06] shadow-[0_8px_32px_rgba(0,0,0,0.4)]'
+          : 'bg-[#0B0B10]'
       }`}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-[68px]">
 
             {/* Logo */}
-            <Link href="/store" className="flex items-center gap-0 group flex-shrink-0">
-              <span className="text-[26px] font-black uppercase tracking-tight" style={{ fontFamily: 'Barlow Condensed, sans-serif', letterSpacing: '-0.01em' }}>
-                <span className="gradient-text">Moto</span>
-                <span className="text-white">Store</span>
-                <span style={{ color: '#FF4500', opacity: 0.7 }}>.rs</span>
-              </span>
+            <Link href="/store" className="flex items-center group flex-shrink-0">
+              <Logo variant="full" scheme="dark" size={24} />
             </Link>
 
             {/* Desktop nav */}
@@ -168,7 +165,7 @@ export default function Header() {
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       exit={{ scale: 0 }}
-                      className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-gradient-to-br from-orange-500 to-red-600 text-white text-[10px] font-black rounded-full flex items-center justify-center shadow-[0_2px_8px_rgba(255,69,0,0.5)]"
+                      className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-gradient-to-br from-orange-500 to-red-600 text-white text-[10px] font-black rounded-full flex items-center justify-center shadow-[0_2px_8px_rgba(255,75,31,0.5)]"
                     >
                       {totalItems}
                     </motion.span>

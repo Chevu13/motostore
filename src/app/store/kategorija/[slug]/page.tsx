@@ -1,15 +1,19 @@
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 import { prisma } from '@/lib/prisma'
 import type { Metadata } from 'next'
 import CategoryPageClient from './CategoryPageClient'
 
+export const dynamic = 'force-dynamic'
+
 interface Props {
-  params: { slug: string }
-  searchParams: { sort?: string; brand?: string; page?: string }
+  params: Promise<{ slug: string }>
+  searchParams: Promise<{ sort?: string; brand?: string; page?: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const category = await prisma.category.findUnique({ where: { slug: params.slug } })
+  const { slug } = await params
+  const category = await prisma.category.findUnique({ where: { slug } })
   if (!category) return {}
   return {
     title: `${category.name} - MotoStore.rs`,
@@ -18,23 +22,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CategoryPage({ params, searchParams }: Props) {
-  const category = await prisma.category.findUnique({ where: { slug: params.slug } })
+  const { slug } = await params
+  const sp = await searchParams
+  const category = await prisma.category.findUnique({ where: { slug } })
   if (!category) notFound()
 
-  const page = parseInt(searchParams.page || '1')
+  const page = parseInt(sp.page || '1')
   const perPage = 12
   const skip = (page - 1) * perPage
 
-  const orderBy = searchParams.sort === 'price_asc'
+  const orderBy = sp.sort === 'price_asc'
     ? { price: 'asc' as const }
-    : searchParams.sort === 'price_desc'
+    : sp.sort === 'price_desc'
     ? { price: 'desc' as const }
     : { createdAt: 'desc' as const }
 
   const where = {
     categoryId: category.id,
     isActive: true,
-    ...(searchParams.brand && { brand: searchParams.brand }),
+    ...(sp.brand && { brand: sp.brand }),
   }
 
   const [productsRaw, total] = await Promise.all([
@@ -67,6 +73,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   }))
 
   return (
+    <Suspense fallback={<div className="min-h-screen pt-24 flex justify-center"><div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" /></div>}>
     <CategoryPageClient
       category={category}
       products={products}
@@ -74,8 +81,9 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       page={page}
       perPage={perPage}
       brands={brands.map(b => b.brand!).filter(Boolean)}
-      currentSort={searchParams.sort || 'newest'}
-      currentBrand={searchParams.brand}
+      currentSort={sp.sort || 'newest'}
+      currentBrand={sp.brand}
     />
+    </Suspense>
   )
 }

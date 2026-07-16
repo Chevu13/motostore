@@ -3,9 +3,10 @@ import HeroSection from '@/components/home/HeroSection'
 import CategoriesSection from '@/components/home/CategoriesSection'
 import FeaturedProducts from '@/components/home/FeaturedProducts'
 import TestimonialsSection from '@/components/home/TestimonialsSection'
-import WhyChooseUs from '@/components/home/WhyChooseUs'
 import DeliveryBanner from '@/components/home/DeliveryBanner'
 import NewsletterSection from '@/components/home/NewsletterSection'
+
+export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
   const featuredProductsRaw = await prisma.product.findMany({
@@ -33,7 +34,6 @@ export default async function HomePage() {
       <CategoriesSection />
       <FeaturedProducts products={featuredProducts} />
       <TestimonialsSection />
-      <WhyChooseUs />
       <DeliveryBanner />
       <NewsletterSection />
     </div>

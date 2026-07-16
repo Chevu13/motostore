@@ -18,7 +18,7 @@ export default function DeliveryBanner() {
         background: 'linear-gradient(135deg, #0F0A08 0%, #150A05 50%, #0F0808 100%)'
       }} />
       <div className="absolute inset-0 opacity-30"
-        style={{ background: 'radial-gradient(ellipse at 30% 50%, rgba(255,69,0,0.12) 0%, transparent 60%)' }} />
+        style={{ background: 'radial-gradient(ellipse at 30% 50%, rgba(255,75,31,0.12) 0%, transparent 60%)' }} />
 
       <div className="relative container mx-auto px-4 max-w-6xl">
         <motion.div
@@ -45,16 +45,16 @@ export default function DeliveryBanner() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
               className="relative flex flex-col items-center text-center p-6 rounded-2xl border border-orange-500/15"
-              style={{ background: 'rgba(255,69,0,0.04)' }}
+              style={{ background: 'rgba(255,75,31,0.04)' }}
             >
               {/* Step number */}
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black text-white"
-                style={{ background: 'linear-gradient(135deg,#FF4500,#CC2200)' }}>
+                style={{ background: 'linear-gradient(135deg,#FF4B1F,#CC2200)' }}>
                 {i + 1}
               </div>
 
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 mt-2"
-                style={{ background: 'rgba(255,69,0,0.12)', border: '1px solid rgba(255,69,0,0.2)' }}>
+                style={{ background: 'rgba(255,75,31,0.12)', border: '1px solid rgba(255,75,31,0.2)' }}>
                 <step.icon size={22} className="text-orange-400" />
               </div>
               <h3 className="text-white font-bold text-[16px] mb-1" style={{ fontFamily: 'Barlow Condensed, sans-serif' }}>

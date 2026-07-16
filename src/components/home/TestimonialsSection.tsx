@@ -12,7 +12,7 @@ const TESTIMONIALS = [
     product: 'Shoei GT-Air 3',
     text: 'Kaciga stigla za 3 dana, pakovanje perfektno. Kvalitet je odličan, tačno onakva kao na slikama. Pouzeće je bilo super, nisam morao ništa unapred da platim. Preporučujem svima!',
     avatar: 'MJ',
-    color: '#FF4500',
+    color: '#FF4B1F',
   },
   {
     name: 'Stefan Nikolić',
@@ -22,7 +22,7 @@ const TESTIMONIALS = [
     product: 'Alpinestars Andes V3 Jakna',
     text: 'Naručio sam jaknu, stigla brzo i odgovara veličini. Materijal je premium, vodootporna membrana radi odlično. Kurir je bio ljubazan. Definitivno kupujem ponovo!',
     avatar: 'SN',
-    color: '#E63946',
+    color: '#E5484D',
   },
   {
     name: 'Ana Petrović',
@@ -32,7 +32,7 @@ const TESTIMONIALS = [
     product: 'Sidi Adventure 2 Čizme',
     text: 'Konačno sam pronašla pouzdanu prodavnicu za moto opremu u Srbiji! Čizme su fantastične, Gore-Tex stvarno drži vodu napolje. Isporuka super, plaćanje pouzećem je ogromna prednost.',
     avatar: 'AP',
-    color: '#FF4500',
+    color: '#FF4B1F',
   },
   {
     name: 'Nikola Đorđević',
@@ -42,7 +42,7 @@ const TESTIMONIALS = [
     product: 'AGV K6 S Kaciga',
     text: 'Odlična usluga! Poručio sam u ponedeljak, stiglo u sredu. Kaciga je autentična, ima sve papire i CE sertifikat. Cena je povoljnija nego u radnjama. 10/10!',
     avatar: 'NĐ',
-    color: '#E63946',
+    color: '#E5484D',
   },
   {
     name: 'Milica Stojanović',
@@ -52,7 +52,7 @@ const TESTIMONIALS = [
     product: 'Alpinestars Andes Pantalone',
     text: 'Pantalone su tačno onakve kao što je opisano. Sjajne za touring, koža je kvalitetna. Jako sam zadovoljna kupovinom, tim je bio ljubazan i odgovorio na sva pitanja.',
     avatar: 'MS',
-    color: '#FF4500',
+    color: '#FF4B1F',
   },
   {
     name: 'Dragan Vasić',
@@ -62,7 +62,7 @@ const TESTIMONIALS = [
     product: 'Dainese Smart Jacket',
     text: 'Airbag jakna je pravo čudo tehnologije. Stigla brzo, sve je bilo kako treba. MotoStore.rs je jedino mesto gde sam mogao da nađem ovaj model u Srbiji. Vrhunska usluga!',
     avatar: 'DV',
-    color: '#E63946',
+    color: '#E5484D',
   },
 ]
 
@@ -87,7 +87,7 @@ export default function TestimonialsSection() {
           className="text-center mb-14"
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-5 text-[11px] font-bold uppercase tracking-widest"
-            style={{ background: 'rgba(255,69,0,0.08)', borderColor: 'rgba(255,69,0,0.2)', color: '#FF4500' }}>
+            style={{ background: 'rgba(255,75,31,0.08)', borderColor: 'rgba(255,75,31,0.2)', color: '#FF4B1F' }}>
             <Star size={11} fill="currentColor" />
             Utisci kupaca
           </div>
@@ -115,7 +115,7 @@ export default function TestimonialsSection() {
               {/* Stars */}
               <div className="flex gap-1 mb-4">
                 {[...Array(t.rating)].map((_, j) => (
-                  <Star key={j} size={14} fill="#FF4500" style={{ color: '#FF4500' }} />
+                  <Star key={j} size={14} fill="#FF4B1F" style={{ color: '#FF4B1F' }} />
                 ))}
               </div>
 

@@ -6,17 +6,29 @@
 
 @layer base {
   :root {
-    --bg: #08080E;
-    --bg-2: #0D0D15;
-    --bg-3: #12121C;
+    /* MotoStore brand tokens — v1.0 brand guidelines */
+    --ink: #0B0B10;          /* primarna tamna pozadina */
+    --ink-800: #17171D;      /* povrsine / kartice */
+    --graphite-600: #3A3B42; /* borderi, tehnicki akcenti */
+    --graphite-400: #8A8B93; /* sekundarni tekst */
+    --graphite-200: #D7D6D2; /* svetli elementi */
+    --paper: #F6F4F1;        /* svetla pozadina */
+    --steel: #3A3F47;        /* sekundarna */
+    --amber: #E8A23A;        /* akcent / warning */
+    --success: #3FAE6A;
+    --error: #E5484D;
+
+    --bg: var(--ink);
+    --bg-2: var(--ink-800);
+    --bg-3: #1D1D24;
     --border: rgba(255,255,255,0.07);
-    --orange: #FF4500;
-    --orange-dim: rgba(255,69,0,0.15);
-    --red: #E63946;
-    --text: #F0F0F5;
-    --text-dim: rgba(240,240,245,0.45);
-    --text-muted: rgba(240,240,245,0.25);
-    --radius: 0.75rem;
+    --orange: #FF4B1F;       /* Racing Orange */
+    --orange-dim: rgba(255,75,31,0.15);
+    --red: #E5484D;
+    --text: var(--paper);
+    --text-dim: rgba(246,244,241,0.55);
+    --text-muted: rgba(246,244,241,0.32);
+    --radius: 8px;           /* kartice 8 / dugmad 6 / badge 999 */
     --background: 240 6% 4%;
     --foreground: 210 20% 90%;
     --border-color: 240 5% 14%;
@@ -46,13 +58,13 @@
   }
 
   ::selection {
-    background: rgba(255,69,0,0.35);
+    background: rgba(255,75,31,0.35);
     color: #fff;
   }
 
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: #FF4500; border-radius: 2px; }
+  ::-webkit-scrollbar-thumb { background: #FF4B1F; border-radius: 2px; }
 }
 
 @layer components {
@@ -74,16 +86,16 @@
 
   /* ── BUTTONS ────────────────────────────── */
   .btn-moto {
-    @apply inline-flex items-center justify-center gap-2 font-bold uppercase tracking-widest text-white transition-all duration-300 relative overflow-hidden select-none;
-    background: linear-gradient(135deg, #FF4500 0%, #CC2200 100%);
-    border-radius: 8px;
+    @apply inline-flex items-center justify-center gap-2 font-bold uppercase transition-all duration-300 relative overflow-hidden select-none;
+    background: var(--orange);
+    border-radius: 6px;
     padding: 12px 28px;
-    font-size: 13px;
-    font-family: 'Barlow', 'Arial Narrow', Arial, sans-serif;
-    letter-spacing: 0.1em;
-    color: #ffffff !important;
+    font-size: 14px;
+    font-family: 'Barlow', 'Segoe UI', 'Helvetica Neue', sans-serif;
+    letter-spacing: 1.5px; /* +1.5px po tipografskoj skali */
+    color: var(--ink) !important; /* WCAG: Ink tekst na orange (belo pada ispod AA) */
     border: none;
-    box-shadow: 0 4px 20px rgba(255,69,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+    box-shadow: 0 4px 18px rgba(255,75,31,0.28);
   }
 
   .btn-moto::after {
@@ -97,45 +109,46 @@
 
   .btn-moto:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 35px rgba(255,69,0,0.45), inset 0 1px 0 rgba(255,255,255,0.15);
+    background: #FF5A33;
+    box-shadow: 0 8px 32px rgba(255,75,31,0.4);
   }
   .btn-moto:hover::after { opacity: 1; }
   .btn-moto:active { transform: translateY(0); }
 
   .btn-outline-moto {
     @apply inline-flex items-center justify-center gap-2 font-bold uppercase tracking-widest transition-all duration-300 relative overflow-hidden select-none;
-    color: #FF4500;
-    border: 1.5px solid rgba(255,69,0,0.6);
-    border-radius: 8px;
+    color: #FF4B1F;
+    border: 1.5px solid rgba(255,75,31,0.6);
+    border-radius: 6px;
     padding: 11px 28px;
-    font-size: 13px;
+    font-size: 14px;
     font-family: 'Barlow', 'Arial Narrow', Arial, sans-serif;
     letter-spacing: 0.1em;
     background: transparent;
   }
 
   .btn-outline-moto:hover {
-    background: rgba(255,69,0,0.08);
-    border-color: #FF4500;
-    box-shadow: 0 0 25px rgba(255,69,0,0.15), inset 0 0 25px rgba(255,69,0,0.04);
+    background: rgba(255,75,31,0.08);
+    border-color: #FF4B1F;
+    box-shadow: 0 0 25px rgba(255,75,31,0.15), inset 0 0 25px rgba(255,75,31,0.04);
     transform: translateY(-1px);
   }
 
   /* ── PRODUCT CARD ───────────────────────── */
   .product-card {
     @apply relative overflow-hidden transition-all duration-300;
-    background: var(--bg-3);
+    background: var(--ink-800);
     border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 14px;
+    border-radius: 8px; /* brand: kartice 8px */
   }
 
   .product-card:hover {
-    border-color: rgba(255,69,0,0.25);
+    border-color: rgba(255,75,31,0.25);
     transform: translateY(-6px);
     box-shadow:
-      0 0 0 1px rgba(255,69,0,0.1),
+      0 0 0 1px rgba(255,75,31,0.1),
       0 24px 60px rgba(0,0,0,0.6),
-      0 0 40px rgba(255,69,0,0.06);
+      0 0 40px rgba(255,75,31,0.06);
   }
 
   /* ── TYPOGRAPHY ─────────────────────────── */
@@ -146,16 +159,13 @@
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, #FF4500 0%, #FF6B35 50%, #E63946 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--orange);
   }
 
   .price-tag {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 800;
-    color: #FF4500;
+    color: #FF4B1F;
     letter-spacing: 0.02em;
   }
 
@@ -173,9 +183,9 @@
   }
 
   .admin-card {
-    background: var(--bg-3);
+    background: var(--ink-800);
     border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 14px;
+    border-radius: 8px;
     padding: 24px;
   }
 
@@ -185,15 +195,46 @@
     align-items: center;
     gap: 6px;
     padding: 4px 12px;
-    background: rgba(255,69,0,0.12);
-    border: 1px solid rgba(255,69,0,0.3);
-    border-radius: 100px;
-    color: #FF4500;
+    background: rgba(255,75,31,0.12);
+    border: 1px solid rgba(255,75,31,0.3);
+    border-radius: 999px; /* brand: badge pill */
+    color: #FF4B1F;
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
   }
+
+  /* ── SEMANTIČKI BADGE-OVI (brand: success/warning/error, Ink tekst) ── */
+  .badge-success {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 999px;
+    background: rgba(63,174,106,0.15); border: 1px solid rgba(63,174,106,0.4);
+    color: #3FAE6A; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .badge-warning {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 999px;
+    background: rgba(232,162,58,0.15); border: 1px solid rgba(232,162,58,0.4);
+    color: #E8A23A; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .badge-error {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 999px;
+    background: rgba(229,72,77,0.15); border: 1px solid rgba(229,72,77,0.4);
+    color: #E5484D; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+
+  /* ── CONTAINER (brand grid: max 1440, margina 88/40/20) ── */
+  .container-brand {
+    width: 100%; max-width: 1440px; margin-inline: auto;
+    padding-inline: 20px;
+  }
+  @media (min-width: 768px) { .container-brand { padding-inline: 40px; } }
+  @media (min-width: 1280px) { .container-brand { padding-inline: 88px; } }
 }
 
 /* ── ANIMATIONS ─────────────────────────────── */
@@ -234,7 +275,7 @@
   left: -10%;
   width: 60%;
   height: 60%;
-  background: radial-gradient(ellipse, rgba(255,69,0,0.04) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(255,75,31,0.04) 0%, transparent 70%);
   animation: glow-pulse 6s ease-in-out infinite;
 }
 
@@ -247,4 +288,21 @@
   height: 50%;
   background: radial-gradient(ellipse, rgba(230,57,70,0.03) 0%, transparent 70%);
   animation: glow-pulse 8s ease-in-out infinite reverse;
+}
+
+/* Popravka: Chrome autofill je pravio bela polja sa nevidljivim tekstom */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0px 1000px #17171D inset !important;
+  caret-color: #ffffff !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Osiguraj vidljiv tekst u svim admin input poljima */
+.admin-input, input[type="text"], input[type="number"], input[type="email"], input[type="password"], input[type="url"], textarea {
+  color: #ffffff;
 }

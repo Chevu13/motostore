@@ -3,13 +3,16 @@ import { prisma } from '@/lib/prisma'
 import type { Metadata } from 'next'
 import ProductPageClient from './ProductPageClient'
 
+export const dynamic = 'force-dynamic'
+
 interface Props {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
   const product = await prisma.product.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
     include: { images: { where: { isPrimary: true }, take: 1 } },
   })
   if (!product) return {}
@@ -23,8 +26,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductPage({ params }: Props) {
+  const { slug } = await params
   const productRaw = await prisma.product.findUnique({
-    where: { slug: params.slug, isActive: true },
+    where: { slug, isActive: true },
     include: {
       images: { orderBy: { sortOrder: 'asc' } },
       category: true,

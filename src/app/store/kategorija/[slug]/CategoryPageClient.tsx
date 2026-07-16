@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { ShoppingCart, ChevronRight, SlidersHorizontal } from 'lucide-react'
 import { formatPrice } from '@/lib/utils'
@@ -32,11 +32,12 @@ export default function CategoryPageClient({
   category, products, total, page, perPage, brands, currentSort, currentBrand,
 }: Props) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const totalPages = Math.ceil(total / perPage)
   const [modalProduct, setModalProduct] = useState<Product | null>(null)
 
   const updateFilter = (key: string, value: string | null) => {
-    const params = new URLSearchParams(window.location.search)
+    const params = new URLSearchParams(searchParams.toString())
     if (value) params.set(key, value)
     else params.delete(key)
     params.delete('page')
@@ -73,7 +74,7 @@ export default function CategoryPageClient({
             <select
               value={currentBrand || ''}
               onChange={(e) => updateFilter('brand', e.target.value || null)}
-              className="bg-[#111118] border border-white/10 text-gray-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-moto-orange/50"
+              className="bg-[#17171D] border border-white/10 text-gray-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-moto-orange/50"
             >
               <option value="">Svi brendovi</option>
               {brands.map(b => <option key={b} value={b}>{b}</option>)}
@@ -82,7 +83,7 @@ export default function CategoryPageClient({
           <select
             value={currentSort}
             onChange={(e) => updateFilter('sort', e.target.value)}
-            className="bg-[#111118] border border-white/10 text-gray-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-moto-orange/50"
+            className="bg-[#17171D] border border-white/10 text-gray-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-moto-orange/50"
           >
             <option value="newest">Najnoviji</option>
             <option value="price_asc">Cena: manja-veća</option>
@@ -114,7 +115,7 @@ export default function CategoryPageClient({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
               >
-                <Link href={`/proizvod/${product.slug}`} className="product-card block group">
+                <Link href={`/store/proizvod/${product.slug}`} className="product-card block group">
                   <div className="relative aspect-[4/3] overflow-hidden rounded-t-xl bg-[#1a1a24]">
                     {product.images[0] ? (
                       <Image
@@ -128,13 +129,13 @@ export default function CategoryPageClient({
                       <div className="w-full h-full flex items-center justify-center text-4xl">🏍️</div>
                     )}
                     {discount > 0 && (
-                      <span className="absolute top-3 left-3 px-2 py-1 bg-moto-orange text-white text-xs font-bold rounded-md">
+                      <span className="absolute top-3 left-3 px-2 py-1 bg-moto-orange text-[#0B0B10] text-xs font-bold rounded-md">
                         -{discount}%
                       </span>
                     )}
                     <button
                       onClick={(e) => handleCartClick(product, e)}
-                      className="absolute bottom-3 right-3 p-2.5 bg-moto-orange rounded-lg opacity-0 group-hover:opacity-100 transition-all text-white hover:bg-red-600"
+                      className="absolute bottom-3 right-3 p-2.5 bg-moto-orange rounded-lg opacity-0 group-hover:opacity-100 transition-all text-[#0B0B10] hover:bg-[#FF5A33]"
                     >
                       <ShoppingCart size={16} />
                     </button>
@@ -163,7 +164,7 @@ export default function CategoryPageClient({
               onClick={() => updateFilter('page', String(i + 1))}
               className={`w-10 h-10 rounded-lg text-sm font-semibold transition-all ${
                 page === i + 1
-                  ? 'bg-moto-orange text-white'
+                  ? 'bg-moto-orange text-[#0B0B10]'
                   : 'glass text-gray-400 hover:text-white hover:border-moto-orange/30'
               }`}
             >

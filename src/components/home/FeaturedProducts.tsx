@@ -93,7 +93,7 @@ export default function FeaturedProducts({ products }: { products: Product[] }) 
                     <div className="absolute top-3 left-3 flex flex-col gap-1.5">
                       {discount > 0 && (
                         <span className="px-2.5 py-1 text-white text-[11px] font-black rounded-lg tracking-wide"
-                          style={{ background: 'linear-gradient(135deg,#FF4500,#CC2200)', boxShadow: '0 2px 8px rgba(255,69,0,0.4)' }}>
+                          style={{ background: 'linear-gradient(135deg,#FF4B1F,#CC2200)', boxShadow: '0 2px 8px rgba(255,75,31,0.4)' }}>
                           -{discount}%
                         </span>
                       )}
@@ -108,7 +108,7 @@ export default function FeaturedProducts({ products }: { products: Product[] }) 
                     <button
                       onClick={(e) => handleCartClick(product, e)}
                       className="absolute bottom-3 right-3 flex items-center gap-1.5 px-3 py-2 text-white text-[11px] font-bold rounded-xl opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300"
-                      style={{ background: 'linear-gradient(135deg,#FF4500,#CC2200)', boxShadow: '0 4px 16px rgba(255,69,0,0.5)' }}
+                      style={{ background: 'linear-gradient(135deg,#FF4B1F,#CC2200)', boxShadow: '0 4px 16px rgba(255,75,31,0.5)' }}
                     >
                       <ShoppingCart size={12} />
                       <span className="hidden sm:block">U korpu</span>

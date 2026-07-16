@@ -76,11 +76,18 @@ export async function POST(request: NextRequest) {
       })),
     }
 
-    // Send emails in background
-    Promise.all([
-      sendOrderConfirmationEmail(emailData).catch(console.error),
-      sendAdminOrderNotificationEmail(emailData).catch(console.error),
+    // Pošalji mejlove PRE odgovora — na Vercel-u (serverless) se pozadinski
+    // rad posle vraćenog odgovora može prekinuti pre nego što stigne da završi,
+    // pa "fire and forget" slanje nepouzdano gubi mejlove bez ikakve greške.
+    const emailResults = await Promise.allSettled([
+      sendOrderConfirmationEmail(emailData),
+      sendAdminOrderNotificationEmail(emailData),
     ])
+    emailResults.forEach((r, i) => {
+      if (r.status === 'rejected') {
+        console.error(`[email] ${i === 0 ? 'potvrda kupcu' : 'obaveštenje adminu'} nije poslata:`, r.reason)
+      }
+    })
 
     return NextResponse.json({ orderNumber: order.orderNumber, id: order.id })
   } catch (error) {
