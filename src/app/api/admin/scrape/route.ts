@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 
 // Kurs EUR -> RSD (možeš menjati). Marža predloga = 35%.
 const EUR_TO_RSD = 117
-const DEFAULT_MARGIN = 1.35
+const DEFAULT_MARGIN = 1.18 // 18% marža na sve proizvode
 
 interface ScrapedProduct {
   name: string | null
@@ -252,10 +252,21 @@ export async function POST(request: NextRequest) {
     ]
     const imgAttrs = ['src', 'data-src', 'data-zoom-image', 'data-image', 'data-large_image', 'data-lazy', 'data-original']
     const blockedWords = ['logo', 'icon', 'sprite', 'placeholder', 'flag', 'payment', 'badge', 'award', 'seal', 'trust', 'stamp', 'category', 'nav-', 'menu-']
+    // Birač boje/varijante (npr. traka malih kaciga u drugim bojama) NIJE galerija OVOG
+    // proizvoda — to su druge varijante. Izbaci sve slike koje su unutar ovakvog kontejnera.
+    const variantSwatchSelector = [
+      '[class*="swatch" i]', '[class*="color-select" i]', '[class*="colorselect" i]',
+      '[class*="color-option" i]', '[class*="coloroption" i]', '[class*="color-picker" i]',
+      '[class*="colorpicker" i]', '[class*="variant-select" i]', '[class*="variantselect" i]',
+      '[class*="variant-option" i]', '[class*="variantoption" i]', '[class*="colorswatch" i]',
+      '[class*="color-swatch" i]', '[class*="colorway" i]', '[data-testid*="color" i]',
+      '[aria-label*="color" i]', '[aria-label*="colour" i]', '[aria-label*="boja" i]',
+    ].join(', ')
 
     const galleryImages: string[] = []
     $(gallerySelectors.join(', ')).find('img, source').addBack('img, source').each((_, el) => {
       const $el = $(el)
+      if ($el.closest(variantSwatchSelector).length > 0) return // preskoči — birač boje, ne galerija
       for (const attr of imgAttrs) {
         let src = $el.attr(attr)
         if (!src) continue
@@ -273,17 +284,18 @@ export async function POST(request: NextRequest) {
     })
 
     if (galleryImages.length > 0) {
-      // Galerija pronađena — koristi samo ove (pouzdano, ne meša kategorije/navigaciju)
+      // Galerija pronađena — koristi samo ove (pouzdano, ne meša kategorije/navigaciju/varijante)
       data.images.push(...galleryImages)
     } else {
       // Fallback: nema prepoznate galerije — pretraži celu stranicu, ali strože filtriraj
       $('img').each((_, el) => {
-        const $el = $(el)
+        const $elFallback = $(el)
+        if ($elFallback.closest(variantSwatchSelector).length > 0) return
         for (const attr of imgAttrs) {
-          let src = $el.attr(attr)
+          let src = $elFallback.attr(attr)
           if (!src) continue
-          if (attr === 'src' && $el.attr('srcset')) {
-            const srcset = $el.attr('srcset')!
+          if (attr === 'src' && $elFallback.attr('srcset')) {
+            const srcset = $elFallback.attr('srcset')!
             const last = srcset.split(',').pop()?.trim().split(' ')[0]
             if (last) src = last
           }
@@ -291,8 +303,8 @@ export async function POST(request: NextRequest) {
             const low = src.toLowerCase()
             if (blockedWords.some((w) => low.includes(w))) continue
             // odbaci male slike po širini/visini atributu (verovatno ikonice)
-            const w = parseInt($el.attr('width') || '0')
-            const h = parseInt($el.attr('height') || '0')
+            const w = parseInt($elFallback.attr('width') || '0')
+            const h = parseInt($elFallback.attr('height') || '0')
             if ((w && w < 150) || (h && h < 150)) continue
             data.images.push(src)
           }
@@ -300,7 +312,9 @@ export async function POST(request: NextRequest) {
       })
       // srcset zaseban prolaz (galerije često koriste samo srcset)
       $('img[srcset], source[srcset]').each((_, el) => {
-        const srcset = $(el).attr('srcset')
+        const $srcsetEl = $(el)
+        if ($srcsetEl.closest(variantSwatchSelector).length > 0) return
+        const srcset = $srcsetEl.attr('srcset')
         if (!srcset) return
         const best = srcset.split(',').map(s => s.trim().split(' ')[0]).filter(u => u.startsWith('http')).pop()
         if (best) {

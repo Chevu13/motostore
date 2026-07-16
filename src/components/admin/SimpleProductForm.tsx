@@ -141,7 +141,7 @@ export default function SimpleProductForm() {
     const p = parseFloat(price)
     if (!n || !p || n <= 0 || p <= 0) return null
     const pct = Math.round(((p - n) / p) * 100)
-    return { pct, color: pct >= 30 ? 'text-emerald-400' : pct >= 15 ? 'text-amber-400' : 'text-red-400' }
+    return { pct, color: pct >= 18 ? 'text-emerald-400' : pct >= 10 ? 'text-amber-400' : 'text-red-400' }
   })()
 
   return (

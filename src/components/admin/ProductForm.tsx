@@ -258,8 +258,8 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
     if (!nabavna || !prodajna || nabavna <= 0 || prodajna <= 0) return null
     const marza = prodajna - nabavna
     const pct = Math.round((marza / prodajna) * 100)
-    const color = pct >= 30 ? 'text-emerald-400' : pct >= 15 ? 'text-amber-400' : 'text-red-400'
-    const label = pct >= 30 ? '✓ Dobra' : pct >= 15 ? '⚠ Niska' : '✗ Premala'
+    const color = pct >= 18 ? 'text-emerald-400' : pct >= 10 ? 'text-amber-400' : 'text-red-400'
+    const label = pct >= 18 ? '✓ Dobra' : pct >= 10 ? '⚠ Niska' : '✗ Premala'
     return { marza, pct, color, label }
   })()
 
@@ -487,7 +487,7 @@ export default function ProductForm({ initialData, mode }: ProductFormProps) {
                 </div>
                 <div className="mt-3 h-1.5 bg-white/8 rounded-full overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all ${marzaInfo.pct >= 30 ? 'bg-emerald-400' : marzaInfo.pct >= 15 ? 'bg-amber-400' : 'bg-red-400'}`}
+                    className={`h-full rounded-full transition-all ${marzaInfo.pct >= 18 ? 'bg-emerald-400' : marzaInfo.pct >= 10 ? 'bg-amber-400' : 'bg-red-400'}`}
                     style={{ width: `${Math.min(marzaInfo.pct, 100)}%` }}
                   />
                 </div>
